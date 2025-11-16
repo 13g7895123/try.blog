@@ -79,10 +79,10 @@
 
 ### 實作使用者故事 1
 
-- [ ] T017 [P] [US1] 實作 usePost composable 在 composables/usePost.ts（fetchArticles, getArticle, createArticle, updateArticle, deleteArticle, getArticlesByTag, getArticleSummaries 方法）
-- [ ] T018 [P] [US1] 建立 ArticleEditor 元件在 components/ArticleEditor.vue（Markdown 輸入欄位、標題輸入、儲存按鈕、載入狀態、錯誤顯示）
-- [ ] T019 [US1] 建立新增文章頁面在 pages/posts/new.vue（使用 ArticleEditor，呼叫 createArticle，導航到列表）
-- [ ] T020 [US1] 建立編輯文章頁面在 pages/posts/[id]/edit.vue（使用 ArticleEditor，呼叫 getArticle 與 updateArticle，保留 createdAt）
+- [X] T017 [P] [US1] 實作 usePost composable 在 composables/usePost.ts（fetchArticles, getArticle, createArticle, updateArticle, deleteArticle, getArticlesByTag, getArticleSummaries 方法）
+- [X] T018 [P] [US1] 建立 ArticleEditor 元件在 components/ArticleEditor.vue（Markdown 輸入欄位、標題輸入、儲存按鈕、載入狀態、錯誤顯示）
+- [X] T019 [US1] 建立新增文章頁面在 pages/posts/new.vue（使用 ArticleEditor，呼叫 createArticle，導航到列表）
+- [X] T020 [US1] 建立編輯文章頁面在 pages/posts/[id]/edit.vue（使用 ArticleEditor，呼叫 getArticle 與 updateArticle，保留 createdAt）
 - [ ] T021 [US1] 新增表單驗證（標題不為空、內容不為空、長度限制），在 ArticleEditor.vue 中使用 utils/validation.ts
 - [ ] T022 [US1] 新增錯誤處理與使用者提示（儲存失敗、quota 超限、驗證錯誤），顯示友善的錯誤訊息
 
