@@ -120,11 +120,11 @@
 
 ### 實作使用者故事 3
 
-- [ ] T028 [P] [US3] 建立 ArticleViewer 元件在 components/ArticleViewer.vue（使用 utils/markdown.ts 渲染內容、顯示標題、建立日期、標籤、v-html 綁定）
-- [ ] T029 [US3] 建立文章檢視頁面在 pages/posts/[id].vue（使用 usePost.getArticle，使用 ArticleViewer 元件，顯示載入與錯誤狀態）
+- [X] T028 [P] [US3] 建立 ArticleViewer 元件在 components/ArticleViewer.vue（使用 utils/markdown.ts 渲染內容、顯示標題、建立日期、標籤、v-html 綁定）
+- [X] T029 [US3] 建立文章檢視頁面在 pages/posts/[id].vue（使用 usePost.getArticle，使用 ArticleViewer 元件，顯示載入與錯誤狀態）
 - [ ] T030 [US3] 設定 Markdown 樣式（Tailwind CSS prose plugin，程式碼區塊語法高亮、適當的行距與字型）在 tailwind.config.ts 中
-- [ ] T031 [US3] 實作安全的 Markdown 渲染（marked 解析 + DOMPurify 清理，防止 XSS），在 utils/markdown.ts 中
-- [ ] T032 [US3] 新增「編輯」按鈕（導航到編輯頁面）與「刪除」按鈕（待 US6 實作）在 ArticleViewer.vue 中
+- [X] T031 [US3] 實作安全的 Markdown 渲染（marked 解析 + DOMPurify 清理，防止 XSS），在 utils/markdown.ts 中
+- [X] T032 [US3] 新增「編輯」按鈕（導航到編輯頁面）與「刪除」按鈕（待 US6 實作）在 ArticleViewer.vue 中
 
 **檢查點**：所有基本閱讀功能（建立、列表、檢視）應完全正常運作
 
