@@ -5,21 +5,38 @@
       <div>
         <label for="title" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
           標題
+          <span class="text-red-600">*</span>
         </label>
-        <input
-          id="title"
-          v-model="form.title"
-          type="text"
-          placeholder="輸入文章標題..."
-          class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
-          maxlength="200"
-          @input="validateTitle"
-        />
+        <div class="relative">
+          <input
+            id="title"
+            v-model="form.title"
+            type="text"
+            placeholder="輸入文章標題..."
+            class="w-full px-4 py-2 border rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:ring-2 focus:border-transparent transition"
+            :class="[
+              errors.title 
+                ? 'border-red-300 dark:border-red-600 focus:ring-red-500' 
+                : 'border-gray-300 dark:border-gray-600 focus:ring-blue-500'
+            ]"
+            maxlength="200"
+            @input="validateTitle"
+            @blur="validateTitleField"
+          />
+          <span v-if="!errors.title && form.title.trim()" class="absolute right-3 top-3 text-green-600">
+            ✓
+          </span>
+        </div>
         <div class="mt-1 flex justify-between">
           <p v-if="errors.title" class="text-sm text-red-600 dark:text-red-400">
             {{ errors.title }}
           </p>
-          <p class="text-xs text-gray-500 dark:text-gray-400">
+          <p 
+            :class="[
+              'text-xs',
+              form.title.length > 180 ? 'text-red-500 dark:text-red-400' : 'text-gray-500 dark:text-gray-400'
+            ]"
+          >
             {{ form.title.length }} / 200
           </p>
         </div>
@@ -29,20 +46,37 @@
       <div>
         <label for="content" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
           內容（Markdown 格式）
+          <span class="text-red-600">*</span>
         </label>
-        <textarea
-          id="content"
-          v-model="form.content"
-          placeholder="輸入文章內容（支援 Markdown）&#10;&#10;# 一級標題&#10;## 二級標題&#10;**粗體** *斜體*"
-          class="w-full h-96 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-white font-mono text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent transition resize-none"
-          maxlength="50000"
-          @input="validateContent"
-        />
+        <div class="relative">
+          <textarea
+            id="content"
+            v-model="form.content"
+            placeholder="輸入文章內容（支援 Markdown）&#10;&#10;# 一級標題&#10;## 二級標題&#10;**粗體** *斜體*"
+            class="w-full h-96 px-4 py-2 border rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-white font-mono text-sm focus:ring-2 focus:border-transparent transition resize-none"
+            :class="[
+              errors.content 
+                ? 'border-red-300 dark:border-red-600 focus:ring-red-500' 
+                : 'border-gray-300 dark:border-gray-600 focus:ring-blue-500'
+            ]"
+            maxlength="50000"
+            @input="validateContent"
+            @blur="validateContentField"
+          />
+          <span v-if="!errors.content && form.content.trim()" class="absolute right-3 top-3 text-green-600">
+            ✓
+          </span>
+        </div>
         <div class="mt-1 flex justify-between">
           <p v-if="errors.content" class="text-sm text-red-600 dark:text-red-400">
             {{ errors.content }}
           </p>
-          <p class="text-xs text-gray-500 dark:text-gray-400">
+          <p 
+            :class="[
+              'text-xs',
+              form.content.length > 45000 ? 'text-red-500 dark:text-red-400' : 'text-gray-500 dark:text-gray-400'
+            ]"
+          >
             {{ form.content.length }} / 50000
           </p>
         </div>
@@ -179,6 +213,8 @@ const isFormValid = computed(() => {
 const validateTitleField = () => {
   if (!form.value.title.trim()) {
     errors.value.title = '標題不可為空白'
+  } else if (form.value.title.length < 1) {
+    errors.value.title = '標題至少需要 1 個字元'
   } else if (form.value.title.length > 200) {
     errors.value.title = '標題長度不可超過 200 字元'
   } else {
@@ -189,6 +225,8 @@ const validateTitleField = () => {
 const validateContentField = () => {
   if (!form.value.content.trim()) {
     errors.value.content = '內容不可為空白'
+  } else if (form.value.content.length < 1) {
+    errors.value.content = '內容至少需要 1 個字元'
   } else if (form.value.content.length > 50000) {
     errors.value.content = '內容長度不可超過 50000 字元'
   } else {

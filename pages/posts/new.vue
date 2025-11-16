@@ -20,6 +20,31 @@
         </p>
       </div>
 
+      <!-- 錯誤提示 -->
+      <div v-if="errorMessage" class="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
+        <div class="flex items-start gap-3">
+          <svg class="w-5 h-5 text-red-600 dark:text-red-400 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+          </svg>
+          <div class="flex-1">
+            <p class="text-sm font-medium text-red-800 dark:text-red-200">
+              發生錯誤
+            </p>
+            <p class="mt-1 text-sm text-red-700 dark:text-red-300">
+              {{ errorMessage }}
+            </p>
+          </div>
+          <button
+            @click="errorMessage = ''"
+            class="text-red-400 hover:text-red-600 dark:hover:text-red-300"
+          >
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+            </svg>
+          </button>
+        </div>
+      </div>
+
       <!-- 編輯器 -->
       <ArticleEditor
         :is-loading="isLoading"
@@ -31,9 +56,14 @@
 
       <!-- 提示訊息 -->
       <div v-if="successMessage" class="mt-6 p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg">
-        <p class="text-sm text-green-800 dark:text-green-200">
-          {{ successMessage }}
-        </p>
+        <div class="flex items-center gap-2">
+          <svg class="w-5 h-5 text-green-600 dark:text-green-400" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+          </svg>
+          <p class="text-sm text-green-800 dark:text-green-200">
+            {{ successMessage }}
+          </p>
+        </div>
       </div>
     </div>
   </div>
@@ -57,6 +87,7 @@ definePageMeta({
 // 狀態
 const isLoading = ref(false)
 const successMessage = ref('')
+const errorMessage = ref('')
 const tags = ref<Tag[]>([])
 
 // 取得 composables
@@ -68,6 +99,7 @@ const { fetchTags } = tag
 // 提交表單
 const handleSubmit = async (data: CreateArticleInput) => {
   isLoading.value = true
+  errorMessage.value = ''
   try {
     const article = await createArticle(data)
     successMessage.value = '文章已成功建立！正在導向...'
@@ -78,8 +110,19 @@ const handleSubmit = async (data: CreateArticleInput) => {
     }, 1000)
   } catch (error) {
     console.error('建立文章失敗:', error)
-    const message = error instanceof Error ? error.message : '建立文章失敗，請重試'
-    // 顯示錯誤訊息（由 ArticleEditor 元件顯示）
+
+    // 提供友善的錯誤訊息
+    if (error instanceof Error) {
+      if (error.message.includes('quota') || error.message.includes('Quota')) {
+        errorMessage.value = '儲存空間不足，無法新增文章。請刪除一些文章後重試。'
+      } else if (error.message.includes('驗證') || error.message.includes('validation')) {
+        errorMessage.value = `驗證失敗：${error.message}`
+      } else {
+        errorMessage.value = `建立文章失敗：${error.message}`
+      }
+    } else {
+      errorMessage.value = '建立文章失敗，請檢查您的輸入並重試。'
+    }
   } finally {
     isLoading.value = false
   }
