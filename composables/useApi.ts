@@ -18,6 +18,11 @@ export function useApi(): UseApiReturn {
    */
   async function get<T>(key: string): Promise<T> {
     try {
+      // 檢查 localStorage 是否可用（SSR 時不可用）
+      if (typeof window === 'undefined' || typeof localStorage === 'undefined') {
+        return [] as T
+      }
+
       const fullKey = key.startsWith(STORAGE_PREFIX) ? key : `${STORAGE_PREFIX}${key}`
 
       // 讀取資料
@@ -40,6 +45,11 @@ export function useApi(): UseApiReturn {
    */
   async function set<T>(key: string, value: T): Promise<void> {
     try {
+      // 檢查 localStorage 是否可用（SSR 時不可用）
+      if (typeof window === 'undefined' || typeof localStorage === 'undefined') {
+        return
+      }
+
       const fullKey = key.startsWith(STORAGE_PREFIX) ? key : `${STORAGE_PREFIX}${key}`
       const serialized = JSON.stringify(value)
 
@@ -59,6 +69,11 @@ export function useApi(): UseApiReturn {
    */
   async function remove(key: string): Promise<void> {
     try {
+      // 檢查 localStorage 是否可用（SSR 時不可用）
+      if (typeof window === 'undefined' || typeof localStorage === 'undefined') {
+        return
+      }
+
       const fullKey = key.startsWith(STORAGE_PREFIX) ? key : `${STORAGE_PREFIX}${key}`
       localStorage.removeItem(fullKey)
     } catch (error) {
@@ -72,6 +87,11 @@ export function useApi(): UseApiReturn {
    */
   async function clear(): Promise<void> {
     try {
+      // 檢查 localStorage 是否可用（SSR 時不可用）
+      if (typeof window === 'undefined' || typeof localStorage === 'undefined') {
+        return
+      }
+
       const keys = Object.keys(localStorage)
       const blogKeys = keys.filter(k => k.startsWith(STORAGE_PREFIX))
 

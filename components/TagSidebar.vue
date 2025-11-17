@@ -117,6 +117,12 @@ const isActiveTag = (slug: string): boolean => {
  * 載入標籤
  */
 const loadTags = async () => {
+  // 只在客戶端執行
+  if (typeof window === 'undefined') {
+    isLoading.value = false
+    return
+  }
+
   try {
     isLoading.value = true
     error.value = ''
@@ -137,15 +143,17 @@ const loadTags = async () => {
   }
 }
 
-// 監聽 activeTagSlug 變化
-watch(() => props.activeTagSlug, () => {
-  // 重新載入以更新計數
-  loadTags()
-}, { immediate: true })
-
 // 生命週期
 onMounted(() => {
   loadTags()
+})
+
+// 監聽 activeTagSlug 變化
+watch(() => props.activeTagSlug, () => {
+  // 重新載入以更新計數（只在客戶端）
+  if (typeof window !== 'undefined') {
+    loadTags()
+  }
 })
 </script>
 

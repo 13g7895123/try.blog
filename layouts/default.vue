@@ -137,14 +137,21 @@ const activeTagSlug = computed(() => {
  * 切換暗色模式
  */
 const toggleDarkMode = () => {
+  if (typeof window === 'undefined') return
+  
   isDark.value = !isDark.value
   const html = document.documentElement
+  
   if (isDark.value) {
     html.classList.add('dark')
-    localStorage.setItem('theme', 'dark')
+    if (typeof localStorage !== 'undefined') {
+      localStorage.setItem('theme', 'dark')
+    }
   } else {
     html.classList.remove('dark')
-    localStorage.setItem('theme', 'light')
+    if (typeof localStorage !== 'undefined') {
+      localStorage.setItem('theme', 'light')
+    }
   }
 }
 
@@ -173,9 +180,12 @@ const loadMobileTags = async () => {
   }
 }
 
-// 生命週期
-onMounted(() => {
-  // 檢查初始暗色模式設置
+/**
+ * 初始化暗色模式
+ */
+const initDarkMode = () => {
+  if (typeof window === 'undefined' || typeof localStorage === 'undefined') return
+  
   const theme = localStorage.getItem('theme')
   const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
   isDark.value = theme === 'dark' || (theme !== 'light' && prefersDark)
@@ -186,6 +196,12 @@ onMounted(() => {
   } else {
     html.classList.remove('dark')
   }
+}
+
+// 生命週期
+onMounted(() => {
+  // 初始化暗色模式
+  initDarkMode()
 
   // 載入行動版標籤
   loadMobileTags()
