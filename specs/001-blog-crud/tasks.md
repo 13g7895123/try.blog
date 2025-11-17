@@ -198,30 +198,30 @@
 
 ### 效能優化
 
-- [ ] T050 [P] 實作 Markdown 渲染快取（避免重複渲染相同內容），在 utils/markdown.ts 中使用 Map 快取
-- [ ] T051 [P] 實作 localStorage 使用率監控與警告（達 80% 時顯示警告），使用 useStorageMonitor composable
-- [ ] T052 [P] 優化文章列表渲染（虛擬滾動或分頁，當文章數量 > 100 時），在 ArticleList.vue 中
-- [ ] T053 [P] 設定 Tailwind PurgeCSS（移除未使用的樣式，減少 CSS bundle 大小），在 tailwind.config.ts 中
+- [X] T050 [P] 實作 Markdown 渲染快取（避免重複渲染相同內容），在 utils/markdown.ts 中使用 Map 快取
+- [X] T051 [P] 實作 localStorage 使用率監控與警告（達 80% 時顯示警告），使用 useStorageMonitor composable
+- [X] T052 [P] 優化文章列表渲染（虛擬滾動或分頁，當文章數量 > 100 時），在 ArticleList.vue 中
+- [X] T053 [P] 設定 Tailwind PurgeCSS（移除未使用的樣式，減少 CSS bundle 大小），在 tailwind.config.ts 中
 
 ### 使用者體驗改善
 
-- [ ] T054 [P] 新增載入動畫與骨架屏（所有資料載入時顯示），在各頁面元件中
-- [ ] T055 [P] 實作響應式設計（320px、768px、1024px 斷點），在所有元件中使用 Tailwind 響應式類別
-- [ ] T056 [P] 新增鍵盤導航支援（Tab、Enter、Escape 鍵），在互動元件中
-- [ ] T057 [P] 實作 ARIA 屬性（無障礙標籤、角色、狀態），在所有元件中
+- [X] T054 [P] 新增載入動畫與骨架屏（所有資料載入時顯示），在各頁面元件中
+- [X] T055 [P] 實作響應式設計（320px、768px、1024px 斷點），在所有元件中使用 Tailwind 響應式類別
+- [X] T056 [P] 新增鍵盤導航支援（Tab、Enter、Escape 鍵），在互動元件中
+- [X] T057 [P] 實作 ARIA 屬性（無障礙標籤、角色、狀態），在所有元件中
 
 ### 安全性與驗證
 
-- [ ] T058 [P] 驗證所有使用者輸入（防止空白、過長內容、惡意字元），在 utils/validation.ts 中
-- [ ] T059 [P] 測試 XSS 防護（嘗試注入 `<script>` 標籤），驗證 DOMPurify 正常運作
-- [ ] T060 [P] 實作錯誤邊界（捕捉元件錯誤並顯示友善訊息），在 layouts/default.vue 中
+- [X] T058 [P] 驗證所有使用者輸入（防止空白、過長內容、惡意字元），在 utils/validation.ts 中
+- [X] T059 [P] 測試 XSS 防護（嘗試注入 `<script>` 標籤），驗證 DOMPurify 正常運作
+- [X] T060 [P] 實作錯誤邊界（捕捉元件錯誤並顯示友善訊息），在 layouts/default.vue 中
 
 ### 文件與維護
 
-- [ ] T061 [P] 更新 quickstart.md（新增實作後的實際驗證步驟）
-- [ ] T062 [P] 建立元件使用文件（每個可重用元件的 props、events、範例）在各元件檔案的註解中
-- [ ] T063 [P] 程式碼清理與重構（移除 console.log、統一命名慣例、改善註解）
-- [ ] T064 [P] 執行 quickstart.md 驗證（按照指南測試所有 6 個驗證場景）
+- [X] T061 [P] 更新 quickstart.md（新增實作後的實際驗證步驟）
+- [X] T062 [P] 建立元件使用文件（每個可重用元件的 props、events、範例）在各元件檔案的註解中
+- [X] T063 [P] 程式碼清理與重構（移除 console.log、統一命名慣例、改善註解）
+- [X] T064 [P] 執行 quickstart.md 驗證（按照指南測試所有 6 個驗證場景）
 
 ---
 

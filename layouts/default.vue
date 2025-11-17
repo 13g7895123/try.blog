@@ -187,7 +187,32 @@ onMounted(() => {
 
   // 載入行動版標籤
   loadMobileTags()
+
+  // 添加鍵盤快捷鍵
+  document.addEventListener('keydown', handleKeyboardShortcuts)
 })
+
+/**
+ * 處理鍵盤快捷鍵
+ */
+const handleKeyboardShortcuts = (event: KeyboardEvent) => {
+  // Ctrl/Cmd + K: 切換暗色模式
+  if ((event.ctrlKey || event.metaKey) && event.key === 'k') {
+    event.preventDefault()
+    toggleDarkMode()
+  }
+
+  // Ctrl/Cmd + N: 新增文章
+  if ((event.ctrlKey || event.metaKey) && event.key === 'n') {
+    event.preventDefault()
+    navigateTo('/posts/new')
+  }
+
+  // Escape: 關閉行動版側邊欄
+  if (event.key === 'Escape' && showMobileSidebar.value) {
+    showMobileSidebar.value = false
+  }
+}
 </script>
 
 <style scoped>

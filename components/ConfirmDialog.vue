@@ -88,7 +88,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, defineProps, defineEmits } from 'vue'
+import { ref, defineProps, defineEmits, watch } from 'vue'
 
 interface Props {
   isOpen: boolean
@@ -130,6 +130,24 @@ const confirm = () => {
 const cancel = () => {
   emit('cancel')
 }
+
+/**
+ * 監聽 isOpen 變化，焦點管理
+ */
+watch(() => props.isOpen, (newValue) => {
+  if (newValue) {
+    // 對話框打開時，禁用頁面滾動
+    document.body.style.overflow = 'hidden'
+    // 延遲後將焦點移到確認按鈕
+    setTimeout(() => {
+      const confirmBtn = document.querySelector('[role="alertdialog"] button:last-of-type') as HTMLButtonElement
+      confirmBtn?.focus()
+    }, 100)
+  } else {
+    // 對話框關閉時，恢復滾動
+    document.body.style.overflow = ''
+  }
+})
 </script>
 
 <style scoped>
