@@ -1,6 +1,6 @@
 <template>
-  <div class="min-h-screen bg-white dark:bg-gray-950 py-8 px-4 sm:px-6 lg:px-8">
-    <div class="max-w-7xl mx-auto">
+  <div class="min-h-screen bg-white dark:bg-gray-950">
+    <div class="w-full">
       <!-- 頁面標題區 -->
       <div class="mb-12">
         <div class="flex items-center justify-between mb-4">

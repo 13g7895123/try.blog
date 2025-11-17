@@ -20,8 +20,8 @@
     </div>
 
     <!-- 文章列表 -->
-    <div v-else class="space-y-4">
-      <div class="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+    <div v-else class="space-y-6">
+      <div class="space-y-6">
         <ArticleCard
           v-for="article in paginatedArticles"
           :key="article.id"
@@ -77,7 +77,7 @@ interface Props {
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  itemsPerPage: 12
+  itemsPerPage: 10
 })
 
 // 分頁狀態
