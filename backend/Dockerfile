@@ -70,6 +70,11 @@ RUN chown -R www-data:www-data /var/www/html
 
 # Create startup script
 RUN echo '#!/bin/sh' > /usr/local/bin/docker-entrypoint.sh && \
+    echo 'cd /var/www/html' >> /usr/local/bin/docker-entrypoint.sh && \
+    echo 'if [ ! -d "vendor" ]; then' >> /usr/local/bin/docker-entrypoint.sh && \
+    echo '    echo "Installing Composer dependencies..."' >> /usr/local/bin/docker-entrypoint.sh && \
+    echo '    composer install --no-interaction --prefer-dist' >> /usr/local/bin/docker-entrypoint.sh && \
+    echo 'fi' >> /usr/local/bin/docker-entrypoint.sh && \
     echo 'chown -R www-data:www-data /var/www/html/writable 2>/dev/null || true' >> /usr/local/bin/docker-entrypoint.sh && \
     echo 'exec /usr/bin/supervisord -c /etc/supervisord.conf' >> /usr/local/bin/docker-entrypoint.sh && \
     chmod +x /usr/local/bin/docker-entrypoint.sh
