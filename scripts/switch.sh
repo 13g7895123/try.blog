@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Blog Application - Switch Script
-# 快速切換藍綠環境
+# 切換藍綠環境
 
 set -e
 
@@ -10,10 +10,14 @@ PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
 
 cd "$PROJECT_DIR"
 
-# Read target color from argument or toggle
-source .env 2>/dev/null || true
-CURRENT_COLOR="${ACTIVE_COLOR:-blue}"
+# Read current active color from nginx config
+if grep -q "proxy_pass http://frontend_green" nginx/nginx.conf; then
+    CURRENT_COLOR="green"
+else
+    CURRENT_COLOR="blue"
+fi
 
+# Determine target color
 if [ -n "$1" ]; then
     TARGET_COLOR="$1"
 else
@@ -45,14 +49,18 @@ fi
 
 echo ""
 
-# Update .env with new active color
-if grep -q "^ACTIVE_COLOR=" .env; then
-    sed -i "s/^ACTIVE_COLOR=.*/ACTIVE_COLOR=$TARGET_COLOR/" .env
+# Copy the appropriate nginx config
+if [ "$TARGET_COLOR" = "green" ]; then
+    cp nginx/nginx.green.conf nginx/nginx.conf
 else
-    echo "ACTIVE_COLOR=$TARGET_COLOR" >> .env
+    cp nginx/nginx.blue.conf nginx/nginx.conf
 fi
 
+# Restart nginx to apply changes
+echo "🔄 Restarting nginx..."
+docker compose restart nginx
+
+echo ""
 echo "✅ Switched to $TARGET_COLOR environment!"
 echo ""
-echo "💡 Note: The switch takes effect for new requests."
-echo "   To reload nginx: docker compose restart nginx"
+echo "💡 Current active: $TARGET_COLOR"
