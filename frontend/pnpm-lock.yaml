@@ -26,6 +26,9 @@ importers:
       vue-chartjs:
         specifier: ^5.3.3
         version: 5.3.3(chart.js@4.5.1)(vue@3.5.24(typescript@5.9.3))
+      vue3-google-login:
+        specifier: ^2.0.34
+        version: 2.0.34(vue@3.5.24(typescript@5.9.3))
     devDependencies:
       '@nuxt/eslint':
         specifier: ^0.5.7
@@ -4874,6 +4877,11 @@ packages:
     resolution: {integrity: sha512-ARBedLm9YlbvQomnmq91Os7ck6efydTSpRP3nuOKCvgJOHNrhRoJDSKtee8kcL1Vf7nz6U+PMBL+hTvR3bTVQg==}
     peerDependencies:
       vue: ^3.5.0
+
+  vue3-google-login@2.0.34:
+    resolution: {integrity: sha512-YLEYcv8eKzA7BLsTciDogvxXxyJga4879HkmvWjYsm1t0mJ0Vx5A1EWKMx0YCtMQ2VwQJGy3F8aOw6zO+KkUhA==}
+    peerDependencies:
+      vue: ^3.0.3
 
   vue@3.5.24:
     resolution: {integrity: sha512-uTHDOpVQTMjcGgrqFPSb8iO2m1DUvo+WbGqoXQz8Y1CeBYQ0FXf2z1gLRaBtHjlRz7zZUBHxjVB5VTLzYkvftg==}
@@ -10183,6 +10191,10 @@ snapshots:
   vue-router@4.6.3(vue@3.5.24(typescript@5.9.3)):
     dependencies:
       '@vue/devtools-api': 6.6.4
+      vue: 3.5.24(typescript@5.9.3)
+
+  vue3-google-login@2.0.34(vue@3.5.24(typescript@5.9.3)):
+    dependencies:
       vue: 3.5.24(typescript@5.9.3)
 
   vue@3.5.24(typescript@5.9.3):

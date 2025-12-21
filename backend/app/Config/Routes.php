@@ -50,3 +50,7 @@ $routes->group('api', ['namespace' => 'App\Controllers\Api', 'filter' => 'auth']
     // Uploads
     $routes->post('upload', 'UploadController::index');
 });
+
+// Public Routes (Comments)
+$routes->get('api/articles/(:segment)/comments', 'Api\CommentController::index/$1');
+$routes->post('api/articles/(:segment)/comments', 'Api\CommentController::create/$1');
