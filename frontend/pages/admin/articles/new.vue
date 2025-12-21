@@ -63,6 +63,81 @@
             class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white font-mono"
             placeholder="# 開始撰寫..."
           ></textarea>
+          
+          <!-- Markdown 語法說明 -->
+          <details class="mt-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg p-4 text-sm">
+            <summary class="cursor-pointer font-medium text-gray-700 dark:text-gray-300 hover:text-blue-600">
+              📖 Markdown 語法說明 (點擊展開)
+            </summary>
+            <div class="mt-4 space-y-4 text-gray-600 dark:text-gray-400">
+              <!-- 標題 -->
+              <div>
+                <h4 class="font-medium text-gray-800 dark:text-gray-200 mb-1">標題</h4>
+                <code class="block bg-gray-100 dark:bg-gray-800 p-2 rounded text-xs">
+# 一級標題<br>
+## 二級標題<br>
+### 三級標題
+                </code>
+              </div>
+              
+              <!-- 圖片 -->
+              <div>
+                <h4 class="font-medium text-gray-800 dark:text-gray-200 mb-1">📷 插入圖片</h4>
+                <code class="block bg-gray-100 dark:bg-gray-800 p-2 rounded text-xs">
+![圖片說明](https://example.com/image.jpg)
+                </code>
+                <p class="mt-1 text-xs text-gray-500">提示：您可以使用 Imgur、Cloudinary 等圖床服務上傳圖片後取得 URL</p>
+              </div>
+              
+              <!-- 程式碼區塊 -->
+              <div>
+                <h4 class="font-medium text-gray-800 dark:text-gray-200 mb-1">💻 程式碼區塊</h4>
+                <code class="block bg-gray-100 dark:bg-gray-800 p-2 rounded text-xs whitespace-pre">
+```javascript
+function hello() {
+  console.log('Hello, World!');
+}
+```</code>
+                <p class="mt-1 text-xs text-gray-500">支援語法高亮：javascript, python, html, css, bash, json 等</p>
+              </div>
+              
+              <!-- 行內程式碼 -->
+              <div>
+                <h4 class="font-medium text-gray-800 dark:text-gray-200 mb-1">行內程式碼</h4>
+                <code class="block bg-gray-100 dark:bg-gray-800 p-2 rounded text-xs">
+使用 `const x = 1` 宣告變數
+                </code>
+              </div>
+              
+              <!-- 連結 -->
+              <div>
+                <h4 class="font-medium text-gray-800 dark:text-gray-200 mb-1">🔗 連結</h4>
+                <code class="block bg-gray-100 dark:bg-gray-800 p-2 rounded text-xs">
+[連結文字](https://example.com)
+                </code>
+              </div>
+              
+              <!-- 列表 -->
+              <div>
+                <h4 class="font-medium text-gray-800 dark:text-gray-200 mb-1">列表</h4>
+                <code class="block bg-gray-100 dark:bg-gray-800 p-2 rounded text-xs">
+- 項目 1<br>
+- 項目 2<br>
+<br>
+1. 編號項目 1<br>
+2. 編號項目 2
+                </code>
+              </div>
+              
+              <!-- 引用 -->
+              <div>
+                <h4 class="font-medium text-gray-800 dark:text-gray-200 mb-1">引用</h4>
+                <code class="block bg-gray-100 dark:bg-gray-800 p-2 rounded text-xs">
+&gt; 這是一段引用文字
+                </code>
+              </div>
+            </div>
+          </details>
         </div>
 
         <!-- 按鈕區 -->

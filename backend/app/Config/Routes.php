@@ -30,6 +30,10 @@ $routes->group('api', ['namespace' => 'App\Controllers\Api'], function ($routes)
     // System
     $routes->get('system/tables', 'SystemController::tables');
     $routes->get('system/health', 'SystemController::health');
+
+    // Views (public track, protected stats)
+    $routes->post('views/(:segment)', 'ViewsController::track/$1');
+    $routes->get('views/stats', 'ViewsController::stats');
 });
 
 // Protected Routes (Apply Auth Filter)

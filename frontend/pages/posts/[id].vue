@@ -113,6 +113,9 @@ const loadArticle = async () => {
       .filter((t: Tag | undefined): t is Tag => t !== undefined)
 
     tags.value = articleTags
+
+    // 記錄瀏覽次數 (不等待結果)
+    $fetch(`/api/views/${id}`, { method: 'POST' }).catch(() => {})
   } catch (err) {
     console.error('載入文章失敗:', err)
     error.value = err instanceof Error ? err.message : '無法載入文章'
