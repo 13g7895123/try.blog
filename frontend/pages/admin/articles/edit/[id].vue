@@ -48,6 +48,25 @@
               {{ tag.name }}
             </button>
           </div>
+
+          <!-- 快速新增標籤 -->
+          <div class="flex items-center gap-2 max-w-xs">
+            <input
+              v-model="newTagName"
+              type="text"
+              placeholder="新增標籤..."
+              class="px-2 py-1 text-sm border border-gray-300 dark:border-gray-600 rounded focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
+              @keydown.enter.prevent="handleQuickCreateTag"
+            />
+            <button
+              type="button"
+              @click="handleQuickCreateTag"
+              :disabled="!newTagName"
+              class="px-3 py-1 text-sm bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-200 rounded hover:bg-gray-300 dark:hover:bg-gray-500 disabled:opacity-50"
+            >
+              新增
+            </button>
+          </div>
         </div>
 
         <!-- 內容 -->
@@ -153,6 +172,37 @@ const toggleTag = (id: string) => {
     form.tagIds.push(id)
   } else {
     form.tagIds.splice(index, 1)
+  }
+}
+
+const newTagName = ref('')
+const { createTag } = useTag()
+
+const handleQuickCreateTag = async () => {
+  if (!newTagName.value.trim()) return
+  
+  try {
+    const name = newTagName.value.trim()
+    const slug = name.toLowerCase().replace(/\s+/g, '-')
+    
+    // 呼叫建立標籤 API
+    await createTag({ name, slug })
+    
+    // 重新載入標籤列表
+    allTags.value = await fetchTags()
+    
+    // 自動選取新建立的標籤
+    const newTag = allTags.value.find((t: any) => t.name === name)
+    if (newTag) {
+      if (!form.tagIds.includes(newTag.id)) {
+         form.tagIds.push(newTag.id)
+      }
+    }
+    
+    newTagName.value = ''
+  } catch (e) {
+    console.error(e)
+    alert('建立標籤失敗 (可能名稱重複)')
   }
 }
 

@@ -197,6 +197,7 @@ onMounted(() => {
   @apply text-gray-900 dark:text-gray-100;
 }
 
+.prose h1,
 .prose h2,
 .prose h3,
 .prose h4,
