@@ -1,5 +1,5 @@
 <template>
-  <div class="max-w-4xl mx-auto">
+  <div class="w-full">
     <div class="mb-6">
       <NuxtLink to="/admin/articles" class="text-gray-500 hover:text-gray-700 flex items-center mb-2">
         ← 返回列表
