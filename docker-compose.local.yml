@@ -1,0 +1,56 @@
+# Local Development Environment
+# Only backend and database, no frontend or nginx
+
+services:
+  # Backend (CodeIgniter 4)
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: blog-backend-local
+    ports:
+      - "${BACKEND_PORT:-8080}:80"
+    volumes:
+      - ./backend:/var/www/html
+    environment:
+      - CI_ENVIRONMENT=development
+      - database.default.hostname=db
+      - database.default.database=${POSTGRES_DB:-blog}
+      - database.default.username=${POSTGRES_USER:-blog_user}
+      - database.default.password=${POSTGRES_PASSWORD:-blog_password}
+      - database.default.DBDriver=Postgre
+      - database.default.port=5432
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - blog-local-network
+    restart: unless-stopped
+
+  # PostgreSQL Database
+  db:
+    image: postgres:16-alpine
+    container_name: blog-db-local
+    ports:
+      - "${DB_PORT:-5433}:5432"
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB:-blog}
+      - POSTGRES_USER=${POSTGRES_USER:-blog_user}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-blog_password}
+    volumes:
+      - postgres_local_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-blog_user} -d ${POSTGRES_DB:-blog}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - blog-local-network
+    restart: unless-stopped
+
+networks:
+  blog-local-network:
+    driver: bridge
+
+volumes:
+  postgres_local_data:
