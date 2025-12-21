@@ -1,123 +1,94 @@
 import type { UseApiReturn } from '~/types/api'
-import { StorageError, QuotaExceededError } from '~/types/api'
-import { safeGet, safeSet, safeRemove, isStorageAvailable } from '~/utils/storage'
+import { StorageError, QuotaExceededError, NotFoundError, ValidationError } from '~/types/api'
 
 /**
  * useApi composable
  * 
- * 資料存取抽象層，統一 localStorage 和未來 API 的介面
- * MVP 階段使用 localStorage 實作
- * 
- * @returns UseApiReturn
+ * 使用 Nuxt useFetch 實作的 API 客戶端
  */
-export function useApi(): UseApiReturn {
-  const STORAGE_PREFIX = 'blog:'
+export function useApi() {
 
   /**
-   * 取得資料
+   * 處理 API 錯誤
    */
-  async function get<T>(key: string): Promise<T> {
-    try {
-      // 檢查 localStorage 是否可用（SSR 時不可用）
-      if (typeof window === 'undefined' || typeof localStorage === 'undefined') {
-        return [] as T
-      }
+  function handleError(error: any, context: string) {
+    console.error(`API Error (${context}):`, error)
 
-      const fullKey = key.startsWith(STORAGE_PREFIX) ? key : `${STORAGE_PREFIX}${key}`
-
-      // 讀取資料
-      const item = localStorage.getItem(fullKey)
-
-      if (!item || item === 'null' || item === 'undefined') {
-        // 回傳預設值（空陣列）
-        return [] as T
-      }
-
-      return JSON.parse(item) as T
-    } catch (error) {
-      console.error(`useApi.get 失敗 (${key}):`, error)
-      throw new StorageError(`無法讀取資料: ${key}`)
+    if (error.statusCode === 404) {
+      throw new NotFoundError(context)
     }
+    if (error.statusCode === 400) {
+      throw new ValidationError(error.data?.error || error.message)
+    }
+
+    // 其他錯誤
+    throw new StorageError(error.data?.error || error.message || '發生未預期的錯誤')
   }
 
   /**
-   * 儲存資料
+   * GET 請求
    */
-  async function set<T>(key: string, value: T): Promise<void> {
-    try {
-      // 檢查 localStorage 是否可用（SSR 時不可用）
-      if (typeof window === 'undefined' || typeof localStorage === 'undefined') {
-        return
-      }
+  async function get<T>(endpoint: string): Promise<T> {
+    const { data, error } = await useFetch<T>(`/api/${endpoint}`)
 
-      const fullKey = key.startsWith(STORAGE_PREFIX) ? key : `${STORAGE_PREFIX}${key}`
-      const serialized = JSON.stringify(value)
-
-      // 儲存資料
-      localStorage.setItem(fullKey, serialized)
-    } catch (error) {
-      if (error instanceof Error && error.name === 'QuotaExceededError') {
-        throw new QuotaExceededError()
-      }
-      console.error(`useApi.set 失敗 (${key}):`, error)
-      throw new StorageError(`無法儲存資料: ${key}`)
+    if (error.value) {
+      handleError(error.value, endpoint)
     }
+
+    return data.value as T
   }
 
   /**
-   * 移除資料
+   * POST 請求
    */
-  async function remove(key: string): Promise<void> {
-    try {
-      // 檢查 localStorage 是否可用（SSR 時不可用）
-      if (typeof window === 'undefined' || typeof localStorage === 'undefined') {
-        return
-      }
+  async function post<T>(endpoint: string, body: any): Promise<T> {
+    const { data, error } = await useFetch<T>(`/api/${endpoint}`, {
+      method: 'POST',
+      body
+    })
 
-      const fullKey = key.startsWith(STORAGE_PREFIX) ? key : `${STORAGE_PREFIX}${key}`
-      localStorage.removeItem(fullKey)
-    } catch (error) {
-      console.error(`useApi.remove 失敗 (${key}):`, error)
-      throw new StorageError(`無法移除資料: ${key}`)
+    if (error.value) {
+      handleError(error.value, endpoint)
     }
+
+    return data.value as T
   }
 
   /**
-   * 清除所有部落格資料
+   * PUT 請求
    */
-  async function clear(): Promise<void> {
-    try {
-      // 檢查 localStorage 是否可用（SSR 時不可用）
-      if (typeof window === 'undefined' || typeof localStorage === 'undefined') {
-        return
-      }
+  async function put<T>(endpoint: string, body: any): Promise<T> {
+    const { data, error } = await useFetch<T>(`/api/${endpoint}`, {
+      method: 'PUT',
+      body
+    })
 
-      const keys = Object.keys(localStorage)
-      const blogKeys = keys.filter(k => k.startsWith(STORAGE_PREFIX))
-
-      blogKeys.forEach(key => {
-        localStorage.removeItem(key)
-      })
-
-      console.log(`已清除 ${blogKeys.length} 個部落格資料項目`)
-    } catch (error) {
-      console.error('useApi.clear 失敗:', error)
-      throw new StorageError('無法清除資料')
+    if (error.value) {
+      handleError(error.value, endpoint)
     }
+
+    return data.value as T
   }
 
   /**
-   * 檢查儲存是否可用
+   * DELETE 請求
    */
-  async function checkAvailable(): Promise<boolean> {
-    return isStorageAvailable()
+  async function remove(endpoint: string): Promise<void> {
+    const { error } = await useFetch(`/api/${endpoint}`, {
+      method: 'DELETE'
+    })
+
+    if (error.value) {
+      handleError(error.value, endpoint)
+    }
   }
 
   return {
     get,
-    set,
+    post,
+    put,
     remove,
-    clear,
-    isAvailable: checkAvailable
+    // 相容舊介面 (set 改為 post/put, clear 不支援)
+    isAvailable: async () => true
   }
 }

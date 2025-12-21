@@ -37,11 +37,16 @@ export default defineNuxtConfig({
   // Runtime 設定
   runtimeConfig: {
     public: {
-      useApiBackend: false // MVP 使用 localStorage
+      useApiBackend: true // 切換為真實 API
     }
   },
 
-  // 開發伺服器設定
+  // 開發伺服器與代理設定
+  nitro: {
+    routeRules: {
+      '/api/**': { proxy: 'http://backend:80/api/**' }
+    }
+  },
   devServer: {
     port: 3000
   },
