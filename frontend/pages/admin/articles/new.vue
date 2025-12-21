@@ -55,8 +55,26 @@
           <label for="content" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
             文章內容 (Markdown)
           </label>
+          
+          <!-- 工具列 -->
+          <div class="flex gap-2 mb-2 p-2 bg-gray-50 dark:bg-gray-700/50 rounded-md border border-gray-200 dark:border-gray-600">
+            <label class="cursor-pointer inline-flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-600 rounded transition-colors">
+              <input 
+                type="file" 
+                class="hidden" 
+                accept="image/*"
+                @change="handleImageUpload"
+              >
+              <span v-if="uploading">⏳ 上傳中...</span>
+              <span v-else class="flex items-center gap-1">
+                📷 插入圖片
+              </span>
+            </label>
+          </div>
+
           <textarea
             id="content"
+            ref="textareaRef"
             v-model="form.content"
             required
             rows="15"
@@ -211,6 +229,55 @@ const toggleTag = (id: string) => {
   } else {
     form.tagIds.splice(index, 1)
   }
+}
+
+const textareaRef = ref<HTMLTextAreaElement | null>(null)
+const uploading = ref(false)
+const { uploadImage } = useUpload()
+
+const handleImageUpload = async (event: Event) => {
+  const input = event.target as HTMLInputElement
+  if (!input.files?.length) return
+
+  const file = input.files[0]
+  if (file.size > 2 * 1024 * 1024) {
+    alert('圖片大小不能超過 2MB')
+    return
+  }
+
+  uploading.value = true
+  try {
+    const url = await uploadImage(file)
+    insertTextAtCursor(`![${file.name}](${url})\n`)
+  } catch (e) {
+    console.error(e)
+    alert('圖片上傳失敗')
+  } finally {
+    uploading.value = false
+    input.value = '' // Reset input
+  }
+}
+
+const insertTextAtCursor = (text: string) => {
+  if (!textareaRef.value) {
+    form.content += text
+    return
+  }
+  
+  const textarea = textareaRef.value
+  const start = textarea.selectionStart
+  const end = textarea.selectionEnd
+  
+  form.content = 
+    form.content.substring(0, start) + 
+    text + 
+    form.content.substring(end)
+    
+  // Restore cursor position after next tick
+  setTimeout(() => {
+    textarea.focus()
+    textarea.selectionStart = textarea.selectionEnd = start + text.length
+  }, 0)
 }
 
 const handleSubmit = async () => {

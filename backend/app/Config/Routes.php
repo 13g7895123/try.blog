@@ -46,4 +46,7 @@ $routes->group('api', ['namespace' => 'App\Controllers\Api', 'filter' => 'auth']
     // Tags (Write)
     $routes->post('tags', 'TagController::create');
     $routes->delete('tags/(:segment)', 'TagController::delete/$1');
+
+    // Uploads
+    $routes->post('upload', 'UploadController::index');
 });
