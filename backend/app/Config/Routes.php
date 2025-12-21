@@ -34,6 +34,7 @@ $routes->group('api', ['namespace' => 'App\Controllers\Api'], function ($routes)
     // Views (public track, protected stats)
     $routes->post('views/(:segment)', 'ViewsController::track/$1');
     $routes->get('views/stats', 'ViewsController::stats');
+    $routes->get('views/logs', 'ViewsController::logs');
 });
 
 // Protected Routes (Apply Auth Filter)

@@ -103,4 +103,28 @@ class ViewsController extends BaseController
             'dailyViews' => $dailyViews,
         ]);
     }
+
+    /**
+     * GET /api/views/logs
+     * 取得詳細瀏覽記錄 (後台用)
+     */
+    public function logs(): ResponseInterface
+    {
+        $articleId = $this->request->getGet('article_id');
+        $limit = (int)($this->request->getGet('limit') ?? 100);
+
+        $builder = $this->db->table('article_views av')
+            ->select('av.id, av.article_id, a.title as article_title, av.ip_address, av.user_agent, av.viewed_at')
+            ->join('articles a', 'a.id = av.article_id', 'left')
+            ->orderBy('av.viewed_at', 'DESC')
+            ->limit($limit);
+
+        if ($articleId) {
+            $builder->where('av.article_id', $articleId);
+        }
+
+        $result = $builder->get()->getResultArray();
+
+        return $this->response->setJSON($result);
+    }
 }
