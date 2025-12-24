@@ -77,7 +77,8 @@ services:
       - POSTGRES_USER=${POSTGRES_USER:-blog_user}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-blog_password}
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      # Bind Mount: 資料存放在專案目錄，方便備份和遷移
+      - ./data/postgres:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-blog_user} -d ${POSTGRES_DB:-blog}"]
       interval: 5s
@@ -91,5 +92,4 @@ networks:
   blog-network:
     driver: bridge
 
-volumes:
-  postgres_data:
+# Named Volume 已移除，改用 Bind Mount (./data/postgres)

@@ -50,3 +50,6 @@ coverage
 # Lock files (keep pnpm-lock.yaml for consistency)
 package-lock.json
 yarn.lock
+
+# Database data (Bind Mount)
+data/

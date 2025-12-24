@@ -87,8 +87,8 @@ jobs:
             
             echo "🧹 Cleaning untracked files and directories..."
             # -f: force, -d: directories, -x: include ignored files
-            # Exclude .env and uploads folder from cleaning
-            git clean -fdx -e .env -e .env.local -e writable/ -e uploads/
+            # Exclude .env, uploads, writable, and data (database) folders from cleaning
+            git clean -fdx -e .env -e .env.local -e writable/ -e uploads/ -e data/
             
             echo "🔄 Resetting to latest commit..."
             git reset --hard origin/main || git reset --hard origin/master

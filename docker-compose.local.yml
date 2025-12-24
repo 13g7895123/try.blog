@@ -38,7 +38,8 @@ services:
       - POSTGRES_USER=${POSTGRES_USER:-blog_user}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-blog_password}
     volumes:
-      - postgres_local_data:/var/lib/postgresql/data
+      # Bind Mount: 本地開發資料
+      - ./data/postgres-local:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-blog_user} -d ${POSTGRES_DB:-blog}"]
       interval: 5s
@@ -52,5 +53,4 @@ networks:
   blog-local-network:
     driver: bridge
 
-volumes:
-  postgres_local_data:
+# Named Volume 已移除，改用 Bind Mount (./data/postgres-local)
