@@ -12,7 +12,7 @@ class ArticleModel extends Model
     protected $returnType = 'array';
     protected $useSoftDeletes = false;
     protected $protectFields = true;
-    protected $allowedFields = ['id', 'title', 'content', 'tag_ids', 'created_at', 'updated_at'];
+    protected $allowedFields = ['id', 'title', 'content', 'tag_ids', 'seo_title', 'seo_description', 'seo_keywords', 'created_at', 'updated_at'];
 
     // Dates
     protected $useTimestamps = true;
@@ -24,6 +24,8 @@ class ArticleModel extends Model
     protected $validationRules = [
         'title' => 'required|min_length[1]|max_length[255]',
         'content' => 'required|min_length[1]',
+        'seo_title' => 'permit_empty|max_length[255]',
+        'seo_keywords' => 'permit_empty|max_length[255]',
     ];
     protected $validationMessages = [
         'title' => [

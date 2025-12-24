@@ -9,7 +9,7 @@
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
               d="M12 6.253v13m0-13C6.5 6.253 2 10.998 2 17.25S6.5 28 12 28s10-4.745 10-10.75S17.5 6.253 12 6.253z" />
           </svg>
-          <span class="text-lg font-bold text-gray-900 dark:text-white">部落格</span>
+          <span class="text-lg font-bold text-gray-900 dark:text-white">{{ blogTitle }}</span>
         </NuxtLink>
 
         <!-- 右側按鈕組 -->
@@ -110,6 +110,22 @@ const route = useRoute()
 const tag = useTag()
 const { getActiveTagsWithCount } = tag
 
+// Settings
+const blogTitle = ref('部落格')
+declare const useApi: any
+const { getSettings } = useApi()
+
+const loadSettings = async () => {
+  try {
+    const { data } = await getSettings()
+    if (data.value && data.value.blog_title) {
+      blogTitle.value = data.value.blog_title
+    }
+  } catch (e) {
+    console.error('載入設定失敗', e)
+  }
+}
+
 /**
  * 計算當前活躍的標籤 slug
  */
@@ -189,6 +205,9 @@ const initDarkMode = () => {
 onMounted(() => {
   // 初始化暗色模式
   initDarkMode()
+
+  // 載入設定
+  loadSettings()
 
   // 載入行動版標籤
   loadMobileTags()

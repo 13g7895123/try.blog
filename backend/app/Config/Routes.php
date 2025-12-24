@@ -13,8 +13,8 @@ $routes->get('/', 'Home::index');
 $routes->group('api', ['namespace' => 'App\Controllers\Api'], function ($routes) {
     // Articles
     $routes->get('articles/summary', 'ArticleController::summary');
+    $routes->get('articles/export', 'ArticleController::exportAll');
     $routes->get('articles', 'ArticleController::index');
-    $routes->get('articles/(:segment)', 'ArticleController::show/$1');
     $routes->get('articles/(:segment)', 'ArticleController::show/$1');
 
     // Tags
@@ -28,6 +28,7 @@ $routes->group('api', ['namespace' => 'App\Controllers\Api'], function ($routes)
     $routes->get('auth/me', 'AuthController::me');
 
     // System
+    $routes->get('system/status', 'SystemController::status');
     $routes->get('system/tables', 'SystemController::tables');
     $routes->get('system/health', 'SystemController::health');
 
@@ -41,6 +42,7 @@ $routes->group('api', ['namespace' => 'App\Controllers\Api'], function ($routes)
 $routes->group('api', ['namespace' => 'App\Controllers\Api', 'filter' => 'auth'], function ($routes) {
     // Articles (Write)
     $routes->post('articles', 'ArticleController::create');
+    $routes->post('articles/import', 'ArticleController::import');
     $routes->put('articles/(:segment)', 'ArticleController::update/$1');
     $routes->delete('articles/(:segment)', 'ArticleController::delete/$1');
 
