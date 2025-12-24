@@ -84,6 +84,13 @@ jobs:
             
             echo "📥 Pulling latest code..."
             git fetch origin
+            
+            echo "🧹 Cleaning untracked files and directories..."
+            # -f: force, -d: directories, -x: include ignored files
+            # Exclude .env and uploads folder from cleaning
+            git clean -fdx -e .env -e .env.local -e writable/ -e uploads/
+            
+            echo "🔄 Resetting to latest commit..."
             git reset --hard origin/main || git reset --hard origin/master
             
             echo "📝 Checking .env file..."
