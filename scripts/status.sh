@@ -8,6 +8,10 @@ PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
 
 cd "$PROJECT_DIR"
 
+# Load environment variables
+source .env 2>/dev/null || source .env.example 2>/dev/null || true
+NGINX_PORT="${NGINX_PORT:-8000}"
+
 # Determine current active color
 if grep -q "proxy_pass http://frontend_green" nginx/nginx.conf; then
     CURRENT_COLOR="green"
@@ -27,9 +31,9 @@ echo "🐳 Container Status:"
 docker compose ps --format "table {{.Name}}\t{{.Status}}\t{{.Ports}}"
 echo ""
 echo "🏥 Health Checks:"
-BLUE_HEALTH=$(curl -s -o /dev/null -w "%{http_code}" "http://localhost:8000/health/blue" 2>/dev/null || echo "000")
-GREEN_HEALTH=$(curl -s -o /dev/null -w "%{http_code}" "http://localhost:8000/health/green" 2>/dev/null || echo "000")
-BACKEND_HEALTH=$(curl -s -o /dev/null -w "%{http_code}" "http://localhost:8000/health/backend" 2>/dev/null || echo "000")
+BLUE_HEALTH=$(curl -s -o /dev/null -w "%{http_code}" "http://localhost:$NGINX_PORT/health/blue" 2>/dev/null || echo "000")
+GREEN_HEALTH=$(curl -s -o /dev/null -w "%{http_code}" "http://localhost:$NGINX_PORT/health/green" 2>/dev/null || echo "000")
+BACKEND_HEALTH=$(curl -s -o /dev/null -w "%{http_code}" "http://localhost:$NGINX_PORT/health/backend" 2>/dev/null || echo "000")
 
 echo "   Blue:    HTTP $BLUE_HEALTH"
 echo "   Green:   HTTP $GREEN_HEALTH"

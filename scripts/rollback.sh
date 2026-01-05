@@ -10,6 +10,10 @@ PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
 
 cd "$PROJECT_DIR"
 
+# Load environment variables
+source .env 2>/dev/null || source .env.example 2>/dev/null || true
+NGINX_PORT="${NGINX_PORT:-8000}"
+
 # Determine current active color
 if grep -q "proxy_pass http://frontend_green" nginx/nginx.conf; then
     CURRENT_COLOR="green"
@@ -28,7 +32,7 @@ echo ""
 
 # Health check the rollback target first
 echo "🏥 Checking health of frontend-$ROLLBACK_COLOR..."
-HEALTH_CHECK=$(curl -s -o /dev/null -w "%{http_code}" "http://localhost:8000/health/$ROLLBACK_COLOR" 2>/dev/null || echo "000")
+HEALTH_CHECK=$(curl -s -o /dev/null -w "%{http_code}" "http://localhost:$NGINX_PORT/health/$ROLLBACK_COLOR" 2>/dev/null || echo "000")
 
 if [ "$HEALTH_CHECK" = "200" ]; then
     echo "✅ frontend-$ROLLBACK_COLOR is healthy!"
