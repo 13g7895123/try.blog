@@ -110,6 +110,26 @@ echo -e "${GREEN}✓ Container started${NC}"
 echo ""
 
 # ============================================
+# 確保 Nginx 和其他服務運行中
+# ============================================
+echo -e "${CYAN}🔄 Ensuring nginx and dependencies are running...${NC}"
+
+# Check if nginx is running, if not start it
+NGINX_STATUS=$(docker inspect -f '{{.State.Status}}' "blog-nginx" 2>/dev/null || echo "not_found")
+if [ "$NGINX_STATUS" != "running" ]; then
+    echo -e "${YELLOW}   Nginx not running, starting all services...${NC}"
+    if ! docker compose up -d nginx backend db; then
+        echo -e "${RED}❌ Failed to start nginx and dependencies!${NC}"
+        exit 1
+    fi
+    # Wait for nginx to be ready
+    echo -e "${YELLOW}   Waiting for nginx to initialize...${NC}"
+    sleep 5
+fi
+echo -e "${GREEN}✓ Nginx and dependencies are running${NC}"
+echo ""
+
+# ============================================
 # 等待容器就緒
 # ============================================
 echo -e "${CYAN}⏳ Waiting for container to be ready...${NC}"
